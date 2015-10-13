@@ -1,1 +1,46 @@
 
+각 사용자가 어떻게 passwd를 실행해서 superuser 권한으로 자기의 password를 바꾸냐가 재미있는 내용인데
+
+bart@bear:/usr/bin$ cd /usr/bin/
+bart@bear:/usr/bin$ ls -al passwd 
+-rwsr-xr-x 1 root root 42824 Sep 13  2012 passwd
+
+
+user 권한이 rws로 되어 있는 것을 알 수 있고 rws는 실행된 process가 superuser 권한을 가지게 된다는 것을 의미합니다.
+이것은 chomod u+s 로 shell에서 바꿀수도 있고 다음과 같이 샘플 프로그램을 짜봐도 됩니다.
+
+bart@bear:~/ws/bart$ ll
+total 24
+drwxrwxr-x 2 bart bart 4096 Oct  8 09:08 ./
+drwxrwxr-x 8 bart bart 4096 Oct  7 21:12 ../
+-rwxrwxr-x 1 bart bart 8542 Oct  7 22:04 a.out*
+-rw-rw-rw- 1 bart bart  245 Oct  8 09:08 passwd.c
+bart@bear:~/ws/bart$ 
+bart@bear:~/ws/bart$ cat passwd.c 
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+int main(int argc, char* argv[])
+{
+    struct stat buf;
+    if (stat("passwd.c", &buf) < 0) {
+        printf("error\n");
+    }
+    
+    chmod("passwd.c", buf.st_mode | S_ISUID);
+}
+
+실행하고 나면 
+bart@bear:~/ws/bart$ ./a.out 
+bart@bear:~/ws/bart$ ll
+total 24
+drwxrwxr-x 2 bart bart 4096 Oct  8 09:08 ./
+drwxrwxr-x 8 bart bart 4096 Oct  7 21:12 ../
+-rwxrwxr-x 1 bart bart 8542 Oct  7 22:04 a.out*
+-rwSrw-rw- 1 bart bart  245 Oct  8 09:08 passwd.c
+
+rwS가 되어 있네요
+rwx에 s를 더하면 rws가 되고
+rw-에 s를 더하면 rwS가 됩니다. 
