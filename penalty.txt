@@ -1,0 +1,14 @@
+The following table describes penalty of member for APUE in media scrum team.
+
+<Penalty table>
+┌──────┬───────────┐
+│Name  │Penalty    │
+├──────┼───────────┤
+│Bart  │10,000 won │
+├──────┼───────────┤
+│Nate  │10,000 won │
+├──────┼───────────┤
+│HM    │10,000 won │
+├──────┼───────────┤
+│Jimmy │10,000 won │
+└──────┴───────────┘
